@@ -329,50 +329,133 @@ const value = name => ( $('input[name="'+name+'"]:checked') || {} ).value || '';
 // ── Tracking ──────────────────────────────────────────────────────────────────
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzI1MtSjQDy7kgfx5O0xUXqk2saxqoigcfx6Pr3jOAuT9PquDquGQNCtUuAO4FguFpW/exec';
 
+// Карта: стойност → български текст за всяко поле
+const LABELS = {
+  peak: {
+    panic: '≤10 мин до връх, много интензивно (10–30 мин)',
+    anx_episode: 'По-бавен подем 10–30 мин, без „взрив"',
+    micro: 'Секунди–2 мин и отмина',
+    none: 'Нямам остри епизоди; фонова тревожност'
+  },
+  sx: {
+    palp:'Силно сърцебиене/туптене', breath:'Задух/стягане', tremor:'Треперене/изпотяване',
+    dizzy:'Замайване/нестабилност', tingle:'Мравучкане/изтръпване', hotcold:'Горещи/студени вълни',
+    dereal:'Нереалност/деперсонализация', gi:'Гадене/стомашен възел', chest:'Болка/стягане в гърди'
+  },
+  thoughts: {
+    death_certain:'Сега умирам! Точка.', death_doubt:'Дали не умирам?',
+    crazy_certain:'Полудявам точно сега!', crazy_doubt:'Страх ме е да не полудея',
+    health_event:'Инфаркт/инсулт', worry:'А ако се изложа/не се справя',
+    none:'Нямаше катастрофични мисли'
+  },
+  duration: {
+    '10_30':'~10–30 мин', '30_90':'~30–90 мин (вълнообразно)',
+    sec_min:'Секунди–2 мин', hours:'Часове/цял ден'
+  },
+  avoid: {
+    fear_next:'Постоянен страх да не се повтори', places:'Избягвам места/ситуации',
+    safety:'Опорни навици/контроли', none:'Нямам трайни промени'
+  },
+  trg: {
+    internal:'Вътрешни усещания', situ:'Ситуации тип капан',
+    healthinfo:'Здравни теми/гугъл/новини', substances:'Кофеин/енергийни/никотин',
+    sleep_dehyd:'Недоспиване/обезводняване/глад'
+  },
+  gad: {
+    multi:'Много теми едновременно', mostdays:'Повечето дни от седмицата',
+    control:'Трудно спирам „Ами ако..." мисли', sleep:'Сън/концентрация са влошени'
+  },
+  burn: {
+    work_load:'Силен работен натиск/срокове', work_cyn:'Дистанция/цинизъм към работа',
+    home_load:'Тежък ментален товар у дома', sleep_low:'Лош сън, постоянна умора'
+  },
+  freq: {
+    none:'Няма', rare:'1–2 епизода за 6 месеца',
+    occasional:'1–3 месечно', often:'1+ седмично'
+  },
+  unexp: { outofblue:'Понякога без повод', predict:'Свързани със ситуация/задача' },
+  med_cardio: {
+    exert_pain:'Натиск при усилие с излъчване към ръка/челюст',
+    irreg:'Неравномерен пулс/прескачания',
+    legswelling:'Едностранно подут/болезнен прасец/бедро',
+    faint:'Припадък/колапс'
+  },
+  med_resp: { wheeze:'Свирене в гърдите/нощен задух', pleuritic:'Болка при вдишване/кръв в храчки' },
+  med_endo: { thy:'Отслабване, топлонетолерантност, тремор', hypo:'Симптоми при глад, минават след сладко' },
+  med_neuro: {
+    focal:'Едностранна слабост/говор/зрение',
+    bppv:'Въртене на стаята при лягане/обръщане',
+    apnea:'Силно хъркане/паузи в дишането'
+  },
+  med_gi: { gerd:'Парене зад гръдната кост/буца в гърлото' },
+  med_sub: { caffeine:'След много кофеин/енергийни/никотин', meds:'Деконгестанти/инхалатори/тироксин/стимуланти' }
+};
+
+function toLabel(field, val) {
+  if (!val) return '';
+  const map = LABELS[field] || {};
+  // за multi-value полета (comma separated)
+  if (val.includes(',')) return val.split(',').map(v => map[v] || v).join(' | ');
+  return map[val] || val;
+}
+
 function generateSessionId() {
   return 'T' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2,6).toUpperCase();
 }
 
 let currentSessionId = generateSessionId();
 
+function getSofiaDateTime() {
+  const now = new Date();
+  const sofia = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Sofia' }));
+  const pad = n => String(n).padStart(2,'0');
+  return {
+    date: pad(sofia.getDate()) + '.' + pad(sofia.getMonth()+1) + '.' + sofia.getFullYear(),
+    time: pad(sofia.getHours()) + ':' + pad(sofia.getMinutes())
+  };
+}
+
 function getAllAnswers() {
   return {
-    peak: value('peak'),
-    sx: checked('sx').join(','),
-    thoughts: checked('thoughts').join(','),
-    duration: value('duration'),
-    avoid: checked('avoid').join(','),
-    trg: checked('trg').join(','),
-    gad: checked('gad').join(','),
-    burn: checked('burn').join(','),
-    freq: value('freq'),
-    unexp: checked('unexp').join(','),
-    med_cardio: checked('med_cardio').join(','),
-    med_resp: checked('med_resp').join(','),
-    med_endo: checked('med_endo').join(','),
-    med_neuro: checked('med_neuro').join(','),
-    med_gi: checked('med_gi').join(','),
-    med_sub: checked('med_sub').join(',')
+    peak:       toLabel('peak',       value('peak')),
+    sx:         toLabel('sx',         checked('sx').join(',')),
+    thoughts:   toLabel('thoughts',   checked('thoughts').join(',')),
+    duration:   toLabel('duration',   value('duration')),
+    avoid:      toLabel('avoid',      checked('avoid').join(',')),
+    trg:        toLabel('trg',        checked('trg').join(',')),
+    gad:        toLabel('gad',        checked('gad').join(',')),
+    burn:       toLabel('burn',       checked('burn').join(',')),
+    freq:       toLabel('freq',       value('freq')),
+    unexp:      toLabel('unexp',      checked('unexp').join(',')),
+    med_cardio: toLabel('med_cardio', checked('med_cardio').join(',')),
+    med_resp:   toLabel('med_resp',   checked('med_resp').join(',')),
+    med_endo:   toLabel('med_endo',   checked('med_endo').join(',')),
+    med_neuro:  toLabel('med_neuro',  checked('med_neuro').join(',')),
+    med_gi:     toLabel('med_gi',     checked('med_gi').join(',')),
+    med_sub:    toLabel('med_sub',    checked('med_sub').join(','))
   };
 }
 
 function trackResults(top, redFlags) {
-  const now = new Date();
-  const pad = n => String(n).padStart(2,'0');
-  const dateStr = pad(now.getDate()) + '.' + pad(now.getMonth()+1) + '.' + now.getFullYear();
-  const timeStr = pad(now.getHours()) + ':' + pad(now.getMinutes());
-
+  const { date, time } = getSofiaDateTime();
   const answers = getAllAnswers();
+
+  function scoreStr(entry) {
+    if (!entry) return '';
+    const [k, v] = entry;
+    const max = maxScale[k] ?? 10;
+    return v + '/' + max;
+  }
+
   const payload = {
     sessionId: currentSessionId,
-    date: dateStr,
-    time: timeStr,
+    date, time,
     result1title: top[0] ? texts[top[0][0]]?.title ?? top[0][0] : '',
-    result1score: top[0] ? top[0][1] : '',
+    result1score: scoreStr(top[0]),
     result2title: top[1] ? texts[top[1][0]]?.title ?? top[1][0] : '',
-    result2score: top[1] ? top[1][1] : '',
+    result2score: scoreStr(top[1]),
     result3title: top[2] ? texts[top[2][0]]?.title ?? top[2][0] : '',
-    result3score: top[2] ? top[2][1] : '',
+    result3score: scoreStr(top[2]),
     redFlags: redFlags ? 'да' : 'не',
     ...answers
   };
@@ -388,12 +471,10 @@ function trackResults(top, redFlags) {
 }
 
 function trackCTA(label, href) {
-  const now = new Date();
-  const pad = n => String(n).padStart(2,'0');
+  const { date, time } = getSofiaDateTime();
   const payload = {
     sessionId: currentSessionId,
-    date: pad(now.getDate()) + '.' + pad(now.getMonth()+1) + '.' + now.getFullYear(),
-    time: pad(now.getHours()) + ':' + pad(now.getMinutes()),
+    date, time,
     event: 'cta_click',
     ctaLabel: label,
     ctaHref: href
@@ -779,8 +860,8 @@ $('#calc').addEventListener('click', ()=>{
   const top = Object.entries(scores).sort((a,b)=>b[1]-a[1]).slice(0,3).filter(([,v])=>v>0);
   const redFlags = hasRedFlags();
 
-  trackResults(top, redFlags);
   currentSessionId = generateSessionId();
+  trackResults(top, redFlags);
 
   const emer = emergencyBlock();
   const emerBox = $('#emergency');
