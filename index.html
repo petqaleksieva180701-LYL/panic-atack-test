@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Самооценка: тревожни и паник-подобни състояния</title>
+<style>
+  :root{
+    --bg1:#eef7ff; --bg2:#dff1ff;
+    --panel:#ffffff; --soft:#f6fbff;
+    --text:#0f172a; --muted:#49586d;
+    --line:#d9e6f5;
+    --acc:#0ea5e9; --acc2:#8b5cf6;
+    --ok:#16a34a; --warn:#ea580c; --bad:#dc2626;
+    --brand1:#e0f2ff; --brand2:#efe7ff;
+    --coral-bg:#fdf0ed; --coral-border:#f2c4b8; --coral-btn:#c95a42; --coral-btn2:#b84d37;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,Helvetica,Arial}
+  a{color:var(--acc);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1100px;margin:28px auto;padding:0 16px}
+  header{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{
+    width:48px;height:48px;border-radius:12px;
+    background:
+      radial-gradient(120% 120% at 30% 20%,#ff7aa2,transparent),
+      radial-gradient(140% 120% at 70% 80%,#67e8f9,transparent),
+      #fff;
+    border:1px solid #cfe6ff;
+    box-shadow:0 8px 24px #9dc9ff80;
+  }
+  h1{margin:0;font-size:24px;line-height:1.2}
+  .sub{color:var(--muted);max-width:760px}
+  .fb{display:flex;align-items:center;gap:8px;font-weight:600;white-space:nowrap}
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:16px;padding:18px;margin:16px 0;
+    box-shadow:0 10px 35px #9dc9ff40;
+  }
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media (max-width:900px){.grid{grid-template-columns:1fr}}
+  fieldset{border:0;margin:0;padding:0}
+  legend{font-weight:700;margin-bottom:8px}
+  label{display:block;margin:6px 0 0 0;cursor:pointer}
+  input[type="text"],select{
+    background:var(--soft);border:1px solid var(--line);color:var(--text);
+    border-radius:10px;padding:10px;width:100%;
+  }
+  details{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+  summary{cursor:pointer;font-weight:600}
+  .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .kpi{display:flex;gap:8px;align-items:center;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:10px 12px;color:var(--muted)}
+  .btn{
+    appearance:none;border:0;border-radius:12px;padding:12px 16px;font-weight:700;letter-spacing:.2px;cursor:pointer;color:#fff;
+    background:linear-gradient(180deg,var(--acc),#0284c7);
+    box-shadow:0 10px 20px #60a5fa6b;
+  }
+  .btn.ghost{background:#fff;color:var(--text);border:1px solid var(--line);box-shadow:none}
+  .btn.link{background:#eef6ff;color:var(--acc);border:1px solid var(--line);color:var(--acc)}
+  .btn.coral{
+    background:linear-gradient(180deg,var(--coral-btn),var(--coral-btn2));
+    box-shadow:0 8px 18px #c95a4240;
+    color:#fff;
+  }
+  .btn.coral-ghost{
+    background:transparent;color:var(--coral-btn);
+    border:1.5px solid var(--coral-btn);
+    box-shadow:none;
+  }
+  .btn.red-alert{
+    background:linear-gradient(180deg,#dc2626,#b91c1c);
+    box-shadow:0 8px 18px #dc262640;
+    color:#fff;
+    font-size:14px;
+    padding:14px 20px;
+    display:block;
+    width:100%;
+    text-align:center;
+    margin-top:12px;
+    border-radius:12px;
+    font-weight:700;
+    cursor:default;
+    text-decoration:none;
+  }
+  .hr{height:1px;background:var(--line);margin:16px 0}
+  .sticky-actions{position:sticky;bottom:0;background:linear-gradient(180deg,transparent,#eef7ffcc);backdrop-filter:blur(4px);padding:12px 0;margin-top:10px}
+  .result{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;overflow:hidden}
+  .result .head{
+    margin:-14px -14px 10px -14px;
+    padding:12px 14px;
+    background:linear-gradient(90deg,var(--brand1),var(--brand2));
+    border-bottom:1px solid var(--line);
+  }
+  .result .head h3{margin:0;font-size:18px}
+  .pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#eef6ff;border:1px solid #dbeafe;color:#0f172a;font-size:12px;margin-left:6px}
+  .badge{display:inline-block;background:#f1f5ff;color:#3b82f6;border:1px solid #dbeafe;border-radius:999px;padding:4px 10px;font-size:12px;margin:8px 0 4px}
+  .badge-solution{
+    display:inline-block;
+    background:var(--coral-btn);
+    color:#fff;
+    border-radius:999px;
+    padding:5px 14px;
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.4px;
+    text-transform:uppercase;
+    margin:12px 0 6px;
+  }
+  .callout{border-left:4px solid var(--acc);padding:10px 12px;background:#f6fbff;border:1px solid var(--line);border-radius:8px}
+  .callout.danger{border-color:var(--bad);background:#fff7f7}
+  .res{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:900px){.res{grid-template-columns:1fr}}
+  .footer{color:var(--muted);font-size:12px;margin-top:8px}
+  .cta-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .product-box{
+    background:var(--coral-bg);
+    border:1.5px solid var(--coral-border);
+    border-radius:12px;
+    padding:14px;
+    margin-top:4px;
+  }
+  .product-cta-text{
+    margin:10px 0 4px;
+    font-weight:600;
+    font-size:14px;
+    color:var(--coral-btn2);
+  }
+  .results-subtitle{
+    color:var(--muted);
+    font-size:14px;
+    margin:4px 0 16px;
+    line-height:1.6;
+  }
+  ul.bullets{margin:6px 0 10px 0;padding-left:18px}
+  ul.bullets li{margin:4px 0;line-height:1.5}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" title="Лого — смени го с твое изображение при нужда"></div>
+        <div>
+          <h1>Самооценка: тревожни и паник-подобни състояния</h1>
+          <div class="sub">Попълваш, натискаш „Изчисли резултати" и получаваш топ-3 най-вероятни състояния + ясни стъпки за действие. Това не е медицинска диагноза.</div>
+        </div>
+      </div>
+      <a class="fb btn link" href="https://www.facebook.com/liveyourlifewithpetya" target="_blank" rel="noopener">
+        💙 Live Your Life — Facebook
+      </a>
+    </header>
+
+    <form id="quiz">
+      <div class="grid">
+        <div class="card">
+          <fieldset>
+            <legend>1) Профил на епизода (скорост и ход)</legend>
+            <label><input type="radio" name="peak" value="panic"> ≤10 мин до връх, много интензивно (общо 10–30 мин)</label>
+            <label><input type="radio" name="peak" value="anx_episode"> По-бавен подем 10–30 мин, държи 30–90 мин, без „взрив"</label>
+            <label><input type="radio" name="peak" value="micro"> Секунди–2 мин и отмина</label>
+            <label><input type="radio" name="peak" value="none"> Нямам остри епизоди; по-скоро фонова тревожност</label>
+          </fieldset>
+          <div class="hr"></div>
+          <fieldset>
+            <legend>2) Симптоми (последният най-силен епизод)</legend>
+            <label><input type="checkbox" name="sx" value="palp"> Силно сърцебиене/„туптене"</label>
+            <label><input type="checkbox" name="sx" value="breath"> Задух/стягане/„въздушен глад"</label>
+            <label><input type="checkbox" name="sx" value="tremor"> Треперене/изпотяване</label>
+            <label><input type="checkbox" name="sx" value="dizzy"> Замайване/нестабилност</label>
+            <label><input type="checkbox" name="sx" value="tingle"> Мравучкане/изтръпване</label>
+            <label><input type="checkbox" name="sx" value="hotcold"> Горещи/студени вълни</label>
+            <label><input type="checkbox" name="sx" value="dereal"> Нереалност/деперсонализация</label>
+            <label><input type="checkbox" name="sx" value="gi"> Гадене/стомашен „възел"</label>
+            <label><input type="checkbox" name="sx" value="chest"> Болка/стягане в гърди (без усилие)</label>
+          </fieldset>
+          <div class="hr"></div>
+          <fieldset>
+            <legend>3) Мисли в пика (можеш да избереш повече от една)</legend>
+            <label><input type="checkbox" name="thoughts" value="death_certain"> „Сега умирам! Точка."</label>
+            <label><input type="checkbox" name="thoughts" value="death_doubt"> „Дали не умирам? Дано не е нещо лошо."</label>
+            <label><input type="checkbox" name="thoughts" value="crazy_certain"> „Полудявам точно сега, реално е — губя разума/контрола!"</label>
+            <label><input type="checkbox" name="thoughts" value="crazy_doubt"> „Страх ме е да не полудея/да не изгубя контрол. Полудявам ли?"</label>
+            <label><input type="checkbox" name="thoughts" value="health_event"> „Инфаркт/инсулт"</label>
+            <label><input type="checkbox" name="thoughts" value="worry"> „А ако се изложа/ако не се справя…"</label>
+            <label><input type="checkbox" name="thoughts" value="none"> Нямаше катастрофични мисли, просто се чудих какво се случва и чаках да отмине</label>
+          </fieldset>
+          <div class="hr"></div>
+          <fieldset>
+            <legend>4) Продължителност</legend>
+            <label><input type="radio" name="duration" value="10_30"> ~10–30 мин</label>
+            <label><input type="radio" name="duration" value="30_90"> ~30–90 мин (вълнообразно)</label>
+            <label><input type="radio" name="duration" value="sec_min"> Секунди–2 мин</label>
+            <label><input type="radio" name="duration" value="hours"> Часове/цял ден (без остър връх)</label>
+          </fieldset>
+        </div>
+
+        <div class="card">
+          <fieldset>
+            <legend>5) Поведение (последния ≥1 месец)</legend>
+            <label><input type="checkbox" name="avoid" value="fear_next"> Постоянен страх „да не се повтори"</label>
+            <label><input type="checkbox" name="avoid" value="places"> Избягвам места/ситуации (метро, опашки, мостове, кино)</label>
+            <label><input type="checkbox" name="avoid" value="safety"> Опорни навици/контроли (носене на вода/таблетки, стоене до изход, придружител, мерене на пулс/сатурация)</label>
+            <label><input type="checkbox" name="avoid" value="none"> Нямам трайни промени</label>
+          </fieldset>
+          <div class="hr"></div>
+          <fieldset>
+            <legend>6) Тригери</legend>
+            <label><input type="checkbox" name="trg" value="internal"> Вътрешни усещания (подскок, замайване, гореща вълна)</label>
+            <label><input type="checkbox" name="trg" value="situ"> Ситуации тип „капан" (тълпа, затворено, транспорт, опашка)</label>
+            <label><input type="checkbox" name="trg" value="healthinfo"> Здравни теми/гугъл/новини</label>
+            <label><input type="checkbox" name="trg" value="substances"> Много кофеин/енергийни/никотин/стимуланти</label>
+            <label><input type="checkbox" name="trg" value="sleep_dehyd"> Недоспиване/обезводняване/глад</label>
+          </fieldset>
+          <div class="hr"></div>
+          <fieldset>
+            <legend>7) Фонова тревожност (последни ≥6 месеца)</legend>
+            <label><input type="checkbox" name="gad" value="multi"> Много теми едновременно (здраве, работа, пари, близки)</label>
+            <label><input type="checkbox" name="gad" value="mostdays"> Повечето дни от седмицата</label>
+            <label><input type="checkbox" name="gad" value="control"> Трудно спирам мисли от типа на „Ами ако...(стане нещо)?"</label>
+            <label><input type="checkbox" name="gad" value="sleep"> Сън/концентрация са влошени</label>
+          </fieldset>
+          <div class="hr"></div>
+          <fieldset>
+            <legend>8) Хронично натоварване (последни месеци)</legend>
+            <label><input type="checkbox" name="burn" value="work_load"> Силен работен натиск/срокове</label>
+            <label><input type="checkbox" name="burn" value="work_cyn"> Дистанция/цинизъм към работа; спад в ефективността</label>
+            <label><input type="checkbox" name="burn" value="home_load"> Тежък „ментален товар" у дома/грижи/финанси</label>
+            <label><input type="checkbox" name="burn" value="sleep_low"> Лош сън, постоянна умора, напрежение във врата</label>
+          </fieldset>
+        </div>
+      </div>
+
+      <details class="card">
+        <summary>9) Медицински сигнали (групи) — отбелязвай само ако е реално и повтаряемо</summary>
+        <div class="grid">
+          <div>
+            <fieldset>
+              <legend>Сърце/кръвообращение</legend>
+              <label><input type="checkbox" name="med_cardio" value="exert_pain"> Натиск/стягане при усилие с излъчване към ръка/челюст</label>
+              <label><input type="checkbox" name="med_cardio" value="irreg"> Неравномерен пулс/силни прескачания</label>
+              <label><input type="checkbox" name="med_cardio" value="legswelling"> Едностранно подут/болезнен прасец/бедро</label>
+              <label><input type="checkbox" name="med_cardio" value="faint"> Припадък/колапс</label>
+            </fieldset>
+            <fieldset>
+              <legend>Бял дроб/дишане</legend>
+              <label><input type="checkbox" name="med_resp" value="wheeze"> Свирене в гърдите/нощен задух</label>
+              <label><input type="checkbox" name="med_resp" value="pleuritic"> Болка при вдишване или кръв в храчки</label>
+            </fieldset>
+            <fieldset>
+              <legend>Ендокринно/метаболитно</legend>
+              <label><input type="checkbox" name="med_endo" value="thy"> Отслабване, топлонетолерантност, тремор</label>
+              <label><input type="checkbox" name="med_endo" value="hypo"> Симптоми при глад, минават след сладко</label>
+            </fieldset>
+          </div>
+          <div>
+            <fieldset>
+              <legend>Невро/вътрешно ухо/сън</legend>
+              <label><input type="checkbox" name="med_neuro" value="focal"> Едностранна слабост/говор/зрение (фокални признаци)</label>
+              <label><input type="checkbox" name="med_neuro" value="bppv"> Въртене на стаята при лягане/обръщане</label>
+              <label><input type="checkbox" name="med_neuro" value="apnea"> Силно хъркане/паузи в дишането, сутрешна сънливост</label>
+            </fieldset>
+            <fieldset>
+              <legend>Хранопровод/ГИ</legend>
+              <label><input type="checkbox" name="med_gi" value="gerd"> Парене зад гръдната кост/„буца" в гърлото</label>
+            </fieldset>
+            <fieldset>
+              <legend>Вещества/лекарства</legend>
+              <label><input type="checkbox" name="med_sub" value="caffeine"> След много кофеин/енергийни/никотин</label>
+              <label><input type="checkbox" name="med_sub" value="meds"> Деконгестанти, инхалатори, тироксин, кортикостероиди, стимуланти</label>
+            </fieldset>
+          </div>
+        </div>
+      </details>
+
+      <details class="card">
+        <summary>10) Честота и предвидимост</summary>
+        <div class="grid">
+          <div>
+            <fieldset>
+              <legend>Честота</legend>
+              <label><input type="radio" name="freq" value="none"> Няма</label>
+              <label><input type="radio" name="freq" value="rare"> 1–2 епизода за 6 месеца</label>
+              <label><input type="radio" name="freq" value="occasional"> 1–3 месечно</label>
+              <label><input type="radio" name="freq" value="often"> 1+ седмично</label>
+            </fieldset>
+          </div>
+          <div>
+            <fieldset>
+              <legend>Непредсказуемост</legend>
+              <label><input type="checkbox" name="unexp" value="outofblue"> Понякога започват „без повод"</label>
+              <label><input type="checkbox" name="unexp" value="predict"> Обикновено са свързани със ситуация/задача</label>
+            </fieldset>
+          </div>
+        </div>
+      </details>
+
+      <div class="sticky-actions">
+        <div class="row">
+          <button type="button" class="btn" id="calc">Изчисли резултати</button>
+          <button type="reset" class="btn ghost" id="resetBtn">Изчисти</button>
+          <div class="kpi"><strong>Локално:</strong> изчисленията се правят в твоя браузър.</div>
+        </div>
+      </div>
+    </form>
+
+    <div id="results" class="card" style="display:none">
+      <h2>Резултати и насоки</h2>
+      <p class="results-subtitle">На база на маркираните отговори, това са 3-те най-вероятни състояния, в които се намираш в момента, подредени по оценка на вероятност. На база на резултата имаш предложени техники и насоки за бърза реакция, както и за превенция и стабилизиране, които може да приложиш на първо време.</p>
+      <div id="emergency" class="callout danger" style="display:none;margin-bottom:12px"></div>
+      <div id="medinfo" class="callout" style="display:none;margin-bottom:12px"></div>
+      <div id="top3" class="res"></div>
+      <div class="hr"></div>
+      <div class="footer">
+        👋 Полезни материали и нови програми публикувам тук:
+        <a href="https://www.facebook.com/liveyourlifewithpetya" target="_blank" rel="noopener">Live Your Life — Facebook</a>.
+      </div>
+    </div>
+  </div>
+
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const checked = name => $$('input[name="'+name+'"]:checked').map(i=>i.value);
+const value = name => ( $('input[name="'+name+'"]:checked') || {} ).value || '';
+
+// ── Tracking ──────────────────────────────────────────────────────────────────
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzI1MtSjQDy7kgfx5O0xUXqk2saxqoigcfx6Pr3jOAuT9PquDquGQNCtUuAO4FguFpW/exec';
+
+function generateSessionId() {
+  return 'T' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2,6).toUpperCase();
+}
+
+let currentSessionId = generateSessionId();
+
+function getAllAnswers() {
+  return {
+    peak: value('peak'),
+    sx: checked('sx').join(','),
+    thoughts: checked('thoughts').join(','),
+    duration: value('duration'),
+    avoid: checked('avoid').join(','),
+    trg: checked('trg').join(','),
+    gad: checked('gad').join(','),
+    burn: checked('burn').join(','),
+    freq: value('freq'),
+    unexp: checked('unexp').join(','),
+    med_cardio: checked('med_cardio').join(','),
+    med_resp: checked('med_resp').join(','),
+    med_endo: checked('med_endo').join(','),
+    med_neuro: checked('med_neuro').join(','),
+    med_gi: checked('med_gi').join(','),
+    med_sub: checked('med_sub').join(',')
+  };
+}
+
+function trackResults(top, redFlags) {
+  const now = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  const dateStr = pad(now.getDate()) + '.' + pad(now.getMonth()+1) + '.' + now.getFullYear();
+  const timeStr = pad(now.getHours()) + ':' + pad(now.getMinutes());
+
+  const answers = getAllAnswers();
+  const payload = {
+    sessionId: currentSessionId,
+    date: dateStr,
+    time: timeStr,
+    result1title: top[0] ? texts[top[0][0]]?.title ?? top[0][0] : '',
+    result1score: top[0] ? top[0][1] : '',
+    result2title: top[1] ? texts[top[1][0]]?.title ?? top[1][0] : '',
+    result2score: top[1] ? top[1][1] : '',
+    result3title: top[2] ? texts[top[2][0]]?.title ?? top[2][0] : '',
+    result3score: top[2] ? top[2][1] : '',
+    redFlags: redFlags ? 'да' : 'не',
+    ...answers
+  };
+
+  try {
+    fetch(SHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch(e) {}
+}
+
+function trackCTA(label, href) {
+  const now = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  const payload = {
+    sessionId: currentSessionId,
+    date: pad(now.getDate()) + '.' + pad(now.getMonth()+1) + '.' + now.getFullYear(),
+    time: pad(now.getHours()) + ':' + pad(now.getMinutes()),
+    event: 'cta_click',
+    ctaLabel: label,
+    ctaHref: href
+  };
+  try {
+    fetch(SHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch(e) {}
+}
+
+document.addEventListener('click', function(e) {
+  const a = e.target.closest('a.btn.coral, a.btn.coral-ghost');
+  if (a && $('#results').style.display !== 'none') {
+    trackCTA(a.textContent.trim(), a.href);
+  }
+});
+// ─────────────────────────────────────────────────────────────────────────────
+
+function calcScores(){
+  const scores = {
+    panic_attack:0, panic_attack_health:0, panic_disorder:0,
+    anx_episode:0, gad:0, baseline_anxiety:0,
+    burnout:0, chronic_home:0, chronic_mixed:0,
+    acute_stress:0, panic_emotion:0, anx_peak:0
+  };
+
+  const peak = value('peak');
+  const sx = checked('sx'); const sxCount = sx.length;
+  const thoughts = checked('thoughts');
+  const duration = value('duration');
+  const avoid = checked('avoid');
+  const trg = checked('trg');
+  const gad = checked('gad');
+  const burn = checked('burn');
+  const freq = value('freq');
+  const unexp = checked('unexp');
+
+  if(peak==='panic') scores.panic_attack += 3;
+  if(duration==='10_30') scores.panic_attack += 2;
+  if(sxCount>=4) scores.panic_attack += 3;
+
+  if(thoughts.includes('death_certain')) scores.panic_attack += 3;
+  if(thoughts.includes('crazy_certain')) scores.panic_attack += 3;
+
+  if(thoughts.includes('death_doubt')) { scores.anx_episode += 2; scores.panic_attack_health += 2; }
+  if(thoughts.includes('crazy_doubt')) { scores.anx_episode += 2; }
+  if(thoughts.includes('health_event')) { scores.panic_attack_health += 2; }
+  if(thoughts.includes('worry') && !thoughts.includes('death_certain') && !thoughts.includes('crazy_certain')) { scores.anx_episode += 2; }
+
+  if(unexp.includes('outofblue')) scores.panic_attack += 1;
+  if(freq==='often' || freq==='occasional') scores.panic_attack += 1;
+
+  if(scores.panic_attack>=5 && trg.includes('healthinfo')) scores.panic_attack_health += scores.panic_attack + 2;
+  if(scores.panic_attack>=5 && (checked('med_cardio').length || checked('med_resp').length)) scores.panic_attack_health += 1;
+
+  if((avoid.includes('fear_next') || avoid.includes('places') || avoid.includes('safety'))) scores.panic_disorder += 3;
+  if((avoid.includes('fear_next') && (avoid.includes('places')||avoid.includes('safety')))) scores.panic_disorder += 3;
+  if(freq==='often' || freq==='occasional') scores.panic_disorder += 2;
+  if(unexp.includes('outofblue')) scores.panic_disorder += 1;
+  if(scores.panic_attack>=5) scores.panic_disorder += 2;
+
+  if(peak==='anx_episode') scores.anx_episode += 3;
+  if(duration==='30_90') scores.anx_episode += 2;
+  if(sxCount<=3) scores.anx_episode += 1;
+
+  if(gad.includes('multi')) scores.gad += 2;
+  if(gad.includes('mostdays')) scores.gad += 2;
+  if(gad.includes('control')) scores.gad += 2;
+  if(gad.includes('sleep')) scores.gad += 1;
+  if(freq!=='none' && peak==='none') scores.gad += 1;
+
+  if((gad.length>=1 && gad.length<=2) || (peak==='none' && (gad.length||sxCount<=1))) scores.baseline_anxiety += 2;
+
+  if(burn.includes('work_load')) scores.burnout += 2;
+  if(burn.includes('work_cyn')) scores.burnout += 2;
+  if(burn.includes('sleep_low')) scores.burnout += 1;
+
+  if(burn.includes('home_load')) scores.chronic_home += 3;
+  if(burn.includes('sleep_low')) scores.chronic_home += 1;
+
+  if(burn.includes('home_load') && burn.includes('work_load')) scores.chronic_mixed += 4;
+  if(burn.includes('sleep_low')) scores.chronic_mixed += 2;
+
+  if(value('freq')!=='often' && peak==='none' && checked('unexp').includes('predict')) scores.acute_stress += 2;
+  if(trg.includes('sleep_dehyd') || trg.includes('substances')) scores.acute_stress += 2;
+
+  if(peak==='micro' && (thoughts.includes('death_certain') || thoughts.includes('crazy_certain')) && sxCount<=3) scores.panic_emotion += 3;
+  if(peak==='micro' && !thoughts.includes('death_certain') && !thoughts.includes('crazy_certain')) scores.anx_peak += 3;
+  if(duration==='sec_min') scores.anx_peak += 1;
+
+  if(scores.panic_attack_health>0) scores.panic_attack = Math.max(scores.panic_attack, scores.panic_attack_health-1);
+
+  Object.keys(scores).forEach(k=>scores[k]=Math.max(0, scores[k]));
+  return scores;
+}
+
+const KOD_PRODUCT = `<strong>Програма КОД – Паник Атаки</strong><br>
+Цялостна система в три логични модула (К–О–Д): първо обяснява как работи „фалшивата аларма" в тялото, после дава конкретни стъпки за овладяване на пристъпите, а накрая адресира дълбоките страхове и поведенчески модели, които ги поддържат. Програмата стъпва на доказани, научно подкрепени подходи (КПТ, експозиции, телесна регулация, дишане) и е създадена от човек, който е преминал през паническо разстройство и се е възстановил трайно — тук е събран работещият път, за да можеш да го приложиш и ти.`;
+const KOD_LINK = {txt:'Разгледай Програма КОД – Паник Атаки', href:'https://panik-ataki.withpetya.com/'};
+const KOD_CTA = 'Ако искаш да спреш паник атаките веднъж завинаги — това е следващата ти стъпка:';
+
+const LYL_PRODUCT = `<strong>Live Your Life — доказано ефективни инструменти за по-спокоен живот</strong><br>
+На <a href="https://withpetya.com/" target="_blank" rel="noopener" style="color:var(--coral-btn);font-weight:600">withpetya.com</a> ще намериш програми и практики за медитация, арт терапия, движение и йога — всяка от тях е насочена към намаляване на нивата на стрес в ежедневието и стабилизиране на нервната система. Малки, последователни стъпки с реален и траен ефект.`;
+const LYL_LINK = {txt:'Разгледай програмите в Live Your Life', href:'https://withpetya.com/'};
+const LYL_CTA = 'Избери инструмента, който ти съответства, и започни да стабилизираш нервната си система още днес:';
+
+const texts = {
+  panic_attack: {
+    title:'Паник-атака (клиничен епизод)',
+    why:`Отговорите ти сочат към рязко начало с достигане на връх за минути, наличие на поне четири характерни телесни признака (например сърцебиене, задух или стягане, треперене/изпотяване, замайване, мравучкане, горещи/студени вълни, усещане за нереалност) и катастрофични мисли („умирам", „инфаркт", „губя контрол"). Това съответства на клиничен паник-епизод. Ако отлагаш, пристъпите обикновено се сгъстяват, сънят се влошава и започваш да избягваш места/ситуации. Често ескалира към паническо разстройство.`,
+    now:[
+      'Назови случващото се: „Това е паник-атака — неприятно, но не опасно."',
+      'Дишай само през носа с удължено издишване (4 сек вдишване / 6–8 сек издишване) за 6–10 цикъла.',
+      'Отпусни раменете, челюстта и дланите; остани на място без да бягаш.',
+      'Насочи вниманието навън (какво виждаш/чуваш/усещаш), не към пулса и дишането.',
+      'Прекъсни „опорите": проверки на пулс/сатурация, вода/таблетки „за всеки случай", стоене до изход.'
+    ],
+    long:[
+      'Научи физиологията на паниката (ролята на CO₂ и адреналина) и тренирай ежедневно спокойно носово дишане.',
+      'Прави упражнения за привикване към усещанията — безопасно възпроизвеждаш усещания (бързо ходене/въртене на стол) и оставаш, докато страхът отслабне.',
+      'Връщай се постепенно към плашещите места по план, без придружители и без опорни навици.',
+      'Подреди съня, течностите, храненето; намали кофеина и никотина.',
+      'При чести и ограничаващи епизоди — когнитивно-поведенческа терапия; при нужда и медикаменти по преценка на лекар.'
+    ],
+    product: KOD_PRODUCT, cta: KOD_CTA, link: KOD_LINK
+  },
+  panic_attack_health: {
+    title:'Паник-атака вследствие на здравна тревожност',
+    why:`Отговорите ти сочат към паник-симптоми с бърз връх, свързани със здравни теми: четене/гледане на материали за болести, чести проверки и търсене на уверение. Това насочва към паник-епизод, подхранен от здравни страхове. Ако продължиш със самонаблюдение и търсене на „сигурност" (мерене на пулс/сатурация, гуглене на симптоми, обаждания „да ме успокоят"), зависимостта расте, а доверието в тялото пада.`,
+    now:[
+      'Приложи носова вентилация с по-дълго издишване и остани на място.',
+      'Въведи правило „без проверки и без търсене на уверение 60–90 минути" след епизода.',
+      'Без гугъл, без измервания, без обаждания „да ме успокоят".'
+    ],
+    long:[
+      'Постепенно намалявай и спирай проверките и търсенето на уверение.',
+      'Работи с мислите „а ако е фатално" и с тълкуването на телесните сигнали.',
+      'Прави дозирани експозиции към несигурност и към здравни теми.',
+      'Подреди съня, хидратацията и храненето; умерен кофеин.'
+    ],
+    product: KOD_PRODUCT, cta: KOD_CTA, link: KOD_LINK
+  },
+  panic_disorder: {
+    title:'Паническо разстройство',
+    why:`Отговорите ти сочат към повтарящи се неочаквани паник-епизоди и поне един месец постоянен страх от нов пристъп, избягване на места/ситуации и/или зависимост от опорни навици (постоянни проверки, стоене до изход, придружител). Без целенасочена работа животът се „свива": повече избягване и все повече „безопасни" навици. Често води до агорофобични ограничения и депресивни епизоди.`,
+    now:[
+      'При епизод — дишане с удължено издишване и оставане на място до естествен спад.',
+      'Без напускане и без опори (вода, таблетки, придружител).',
+      'Запиши конкретните избягвания и „безопасни" навици — те ще станат гръбнак на плана за връщане.'
+    ],
+    long:[
+      'Когнитивно-поведенческа терапия с упражнения за привикване към усещанията и стъпаловидни ситуационни експозиции.',
+      'Цел: прекъсване на избягването и зависимостта от опори.',
+      'Ежедневна дихателна практика, стабилен режим на сън и движение.',
+      'При умерено-тежки случаи — консултация с психиатър; при нужда медикаменти, комбинирани с терапия.'
+    ],
+    product: KOD_PRODUCT, cta: KOD_CTA, link: KOD_LINK
+  },
+  anx_episode: {
+    title:'Остър тревожен епизод (тревожен пристъп)',
+    why:`Отговорите ти сочат към по-бавен подем (10–30 минути), по-дълъг ход (30–90 минути), по-малко телесни признаци и липса на мисли от типа „умирам/полудявам". Това съответства на остър тревожен епизод, а не на паник-атака. Отлагането поддържа главоболия от напрежение, „умствен шум" и хронично отлагане на задачи.`,
+    now:[
+      'Дишай с по-дълго издишване за 5–10 цикъла и отпусни раменете/челюстта.',
+      'Направи една малка, конкретна стъпка по задачата (5 минути), вместо да отлагаш.',
+      'Спри проверките и търсенето на уверение за поне 15–30 минути.'
+    ],
+    long:[
+      'Въведи „прозорец за тревоги" — едно кратко фиксирано време на ден; извън него — връщане към задачите.',
+      'Тренирай понасяне на несигурност.',
+      'Поддържай хигиена на съня, намали кофеина, движи се редовно.'
+    ],
+    product: LYL_PRODUCT, cta: LYL_CTA, link: LYL_LINK
+  },
+  gad: {
+    title:'Генерализирана тревожност',
+    why:`Отговорите ти сочат към тревожност в повечето дни от седмицата, в продължение на поне шест месеца, по много теми едновременно, с трудност да спираш „а ако…" мисленето и с нарушение на съня/концентрацията. Без промяна се задълбочават лошият сън, умората и раздразнителността. Рискът е ескалация към депресивни симптоми, паникоподобни пикове и/или прегаряне.`,
+    now:[
+      'Записвай „а ако…" мислите и ги отлагай за едно 15–20-минутно „тревожно време" дневно.',
+      'Прави къси дихателни паузи през деня (2–3 минути с по-дълго издишване).'
+    ],
+    long:[
+      'Когнитивно-поведенческа терапия, насочена към понасяне на несигурност и намаляване на търсенето на уверение.',
+      'Фиксиран режим за сън, хранене и движение.',
+      'Ограничаване на кофеина/никотина; структуриране на деня.',
+      'При нужда — оценка за съпътстващи депресивни симптоми.'
+    ],
+    product: LYL_PRODUCT, cta: LYL_CTA, link: LYL_LINK
+  },
+  baseline_anxiety: {
+    title:'Тревожност (фоново ниво)',
+    why:`Отговорите ти сочат към вълнообразно напрежение без постоянна всекидневна загриженост и без голямо функционално увреждане. Ако я оставиш без промяна, води до плитко дишане, леко безсъние и натрупващо се напрежение. При по-голям натиск лесно прелива към генерализирана тревожност или прегаряне.`,
+    now:[
+      'Въвеждай микропаузи за дишане и кратко раздвижване на всеки 2–3 часа.',
+      'Тренирай малки дози „контролирана" несигурност (напр. нарочно не проверяваш по навик).'
+    ],
+    long:[
+      'Редовен режим на сън, хидратация, хранене и движение.',
+      'Ограничаване на проверките и на безцелното четене на новини.'
+    ],
+    product: LYL_PRODUCT, cta: LYL_CTA, link: LYL_LINK
+  },
+  burnout: {
+    title:'Прегаряне (работен контекст)',
+    why:`Отговорите ти сочат към продължителни високи изисквания, емоционално изтощение, усещане за дистанция/цинизъм към работата и спад в ефективността, често с лош сън. Ако продължиш да натискаш без почивка, грешките, отсъствията и конфликтът между работа и личен живот се увеличават. Често води до продължителни болнични, напускане или депресивен епизод.`,
+    now:[
+      'Въведи кратки микропочивки (3–5 минути) на всеки 60–90 минути работа.',
+      'Направи два фокус-блока без известия.',
+      'Задай граници за чат/имейл.'
+    ],
+    long:[
+      'Преразгледай обема задачи (намаляване с 10–20%), делегирай и договаряй реалистични срокове.',
+      'Изгради план за възстановяване: сън, движение, социално време.',
+      'Развий умения за приоритизация и отказ.'
+    ],
+    product: LYL_PRODUCT, cta: LYL_CTA, link: LYL_LINK
+  },
+  chronic_home: {
+    title:'Хроничен стрес (дом/личен живот)',
+    why:`Отговорите ти сочат към продължителен „ментален товар" у дома (грижи, финанси, множество задачи), постоянна умора и напрежение. Ако не поставиш ясни лични граници, тялото реагира с по-чести болежки и изтощение, а отношенията се обтягат. Често ескалира към „прегаряне на грижещия се" и генерализирана тревожност.`,
+    now:[
+      'Включи кратки възстановяващи прозорци през деня (5–10 минути).',
+      'Разпредели част от задачите.',
+      'Осигури минимална дневна доза движение (15–20 минути енергично ходене).'
+    ],
+    long:[
+      'Изгради мрежа за помощ (семейство/приятели/услуги), ротации и ясни граници.',
+      'Поддържай режим за сън и хранене.',
+      'Практикувай регулярни техники за отпускане на врата и раменете.'
+    ],
+    product: LYL_PRODUCT, cta: LYL_CTA, link: LYL_LINK
+  },
+  chronic_mixed: {
+    title:'Хроничен стрес (смесени източници)',
+    why:`Отговорите ти сочат към силен и продължителен натиск едновременно от работа и от дом, със стабилно изтощение и нарушен сън. Едновременното натоварване води до енергийни „сривове", хаос в графика и повече конфликти. Нерядко преминава в паникоподобни епизоди и трайно влошено функциониране.`,
+    now:[
+      'Планирай два „тихи" прозореца без известия и изисквания (по 15–20 минути) всеки ден.',
+      'Добави дишане с по-дълго издишване и кратко движение.'
+    ],
+    long:[
+      'Постави граници на двата фронта (работа и дом), делегирай и откажи част от задачите.',
+      'Фиксирани часове за сън, храна и тренировка.',
+      'Редизайн на графика с буфери за възстановяване.'
+    ],
+    product: LYL_PRODUCT, cta: LYL_CTA, link: LYL_LINK
+  },
+  acute_stress: {
+    title:'Стрес (остър/адаптивен)',
+    why:`Отговорите ти сочат към реална задача или ситуация, при която реакцията те мобилизира повече, отколкото те парализира. Това е нормален остър стрес. Поредица от такива епизоди без възстановяване обаче се превръща в хроничен стрес с лош сън и спад в ефективността.`,
+    now:[
+      'Дишай 4 секунди вдишване и 6–8 секунди издишване за 1–2 минути.',
+      'Разбий задачата на най-малката следваща стъпка и я започни веднага (правило „пет минути").'
+    ],
+    long:[
+      'Планиране с буфери и ясен „край на работния ден".',
+      'Възстановяване след натиск: сън, движение, контакт с близки.'
+    ],
+    product: LYL_PRODUCT, cta: LYL_CTA, link: LYL_LINK
+  },
+  panic_emotion: {
+    title:'Паника (емоция, не диагноза)',
+    why:`Отговорите ти сочат към кратка вълна страх или стряскане, която отминава сама при спокойно удължено издишване и без пълен набор от паник-симптоми. Ако всеки път реагираш с бягство от ситуацията и с опит за контрол на симптомите, нервната система се „учи" да вдига по-остра реакция. Така лесно ескалира до истинска паник-атака.`,
+    now:[
+      'Направи 4–6 бавни цикъла с по-дълго издишване.',
+      'Назови случващото се и се върни към задачата.'
+    ],
+    long:[
+      'Упражнения за понасяне на телесни усещания.',
+      'Кратки експозиции към лек дискомфорт.'
+    ],
+    product: LYL_PRODUCT, cta: LYL_CTA, link: LYL_LINK
+  },
+  anx_peak: {
+    title:'Тревожен пик',
+    why:`Отговорите ти сочат към секундни до минутни „вълни" с един до три признака (например внезапно замайване или гореща вълна), които бързо отминават, ако не ги подхранваш с проверки и катастрофични мисли. При подхранване с внимание и измервания пиковете стават по-чести и по-остри.`,
+    now:[
+      'Направи едно-две бавни издишвания през носа.',
+      'Не прави проверки за 1–2 минути и продължи започнатото.'
+    ],
+    long:[
+      'Кратки упражнения за привикване към усещанията.',
+      'Базови навици за сън, движение и умерен кофеин.'
+    ],
+    product: LYL_PRODUCT, cta: LYL_CTA, link: LYL_LINK
+  }
+};
+
+const maxScale = {
+  panic_attack:15, panic_attack_health:16, panic_disorder:11,
+  anx_episode:8, gad:8, baseline_anxiety:2,
+  burnout:5, chronic_home:4, chronic_mixed:6,
+  acute_stress:4, panic_emotion:3, anx_peak:4
+};
+
+function renderResult(key, score, index){
+  const t = texts[key]; if(!t) return '';
+  const max = maxScale[key] ?? 10;
+
+  let linksHTML = '';
+  if (Array.isArray(t.link)) {
+    linksHTML = t.link.map(l => `<a class="btn coral" href="${l.href}" target="_blank" rel="noopener">${l.txt}</a>`).join(' ');
+  } else if (t.link) {
+    linksHTML = `<a class="btn coral" href="${t.link.href}" target="_blank" rel="noopener">${t.link.txt}</a>`;
+  }
+
+  const nowHTML = '<ul class="bullets">' + t.now.map(s => `<li>${s}</li>`).join('') + '</ul>';
+  const longHTML = '<ul class="bullets">' + t.long.map(s => `<li>${s}</li>`).join('') + '</ul>';
+
+  return `
+    <div class="result">
+      <div class="head"><h3>${index}. ${t.title} <span class="pill">оценка: ${score} (от 0–${max})</span></h3></div>
+      <div class="badge">Защо</div><div style="margin:6px 0 10px">${t.why}</div>
+      <div class="badge">Бърза реакция</div>${nowHTML}
+      <div class="badge">Превенция и стабилизиране</div>${longHTML}
+      <div class="badge-solution">Препоръчан ресурс / има решение</div>
+      <div class="product-box">
+        ${t.product}
+        <p class="product-cta-text">${t.cta}</p>
+        <div class="cta-row">
+          ${linksHTML}
+          <a class="btn coral-ghost" href="https://www.facebook.com/liveyourlifewithpetya" target="_blank" rel="noopener">💙 Следвай Live Your Life</a>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function emergencyBlock(){
+  const cardio = checked('med_cardio');
+  const resp = checked('med_resp');
+  const neuro = checked('med_neuro');
+  const red = [];
+  if(cardio.includes('exert_pain') || cardio.includes('faint')) red.push('силна болка/натиск в гърдите с излъчване или припадък');
+  if(cardio.includes('legswelling')) red.push('едностранно подут и болезнен крак');
+  if(resp.includes('pleuritic')) red.push('болка при вдишване или кръв в храчки');
+  if(neuro.includes('focal')) red.push('внезапна слабост/нарушен говор/зрение от едната страна');
+  if(red.length){
+    return `<strong>Открити са червени флагове:</strong> ${red.join(', ')}.<br><br>
+    Наличието на тези симптоми сочи по-скоро към <strong>медицинско, а не тревожно състояние</strong>. Методите за справяне с тревожност и паник атаки не са подходящи като „лечение" в този случай и могат да забавят получаването на правилна помощ.<br><br>
+    Необходима е <strong>медицинска консултация</strong>, а не самопомощ. Ако интензитетът на усещанията е постоянен или се засилва — <strong>не изчаквай</strong>.<br><br>
+    <a class="btn red-alert" href="tel:112">⚠️ При постоянни или тежки симптоми — обади се на 112 незабавно</a>`;
+  }
+  return '';
+}
+
+function hasRedFlags(){
+  const cardio = checked('med_cardio');
+  const resp = checked('med_resp');
+  const neuro = checked('med_neuro');
+  return (cardio.includes('exert_pain') || cardio.includes('faint') ||
+          cardio.includes('legswelling') || resp.includes('pleuritic') ||
+          neuro.includes('focal'));
+}
+
+function medInfoBlock(){
+  const groups = [];
+  if(checked('med_cardio').length) groups.push('Сърце и кръвообращение');
+  if(checked('med_resp').length)   groups.push('Бял дроб и дишане');
+  if(checked('med_endo').length)   groups.push('Ендокринни/метаболитни');
+  if(checked('med_neuro').length)  groups.push('Невро/вътрешно ухо/сън');
+  if(checked('med_gi').length)     groups.push('Хранопровод и стомах');
+  if(checked('med_sub').length)    groups.push('Вещества и лекарства');
+  if(!groups.length) return '';
+  return `<strong>Медицински сигнали (групи):</strong> ${groups.join(' · ')}.<br>
+  Отбелязаните симптоми могат да имат физиологична причина. Препоръчително е да се консултираш с лекар или съответен специалист, за да провериш и изключиш медицински проблем — особено при повтарящи се или засилващи се оплаквания. При внезапни тежки симптоми — обади се на <strong>112</strong>.`;
+}
+
+function renderResultCompact(key, score, index){
+  const t = texts[key]; if(!t) return '';
+  const max = maxScale[key] ?? 10;
+  return `<div class="result" style="padding:12px 14px">
+    <div class="head" style="margin:-12px -14px 0 -14px;padding:12px 14px">
+      <h3 style="font-size:16px">${index}. ${t.title} <span class="pill">оценка: ${score} (от 0–${max})</span></h3>
+    </div>
+  </div>`;
+}
+
+$('#calc').addEventListener('click', ()=>{
+  const scores = calcScores();
+  const top = Object.entries(scores).sort((a,b)=>b[1]-a[1]).slice(0,3).filter(([,v])=>v>0);
+  const redFlags = hasRedFlags();
+
+  trackResults(top, redFlags);
+  currentSessionId = generateSessionId();
+
+  const emer = emergencyBlock();
+  const emerBox = $('#emergency');
+  if(emer){ emerBox.style.display='block'; emerBox.innerHTML = emer; }
+  else { emerBox.style.display='none'; emerBox.innerHTML=''; }
+
+  const med = medInfoBlock();
+  const medBox = $('#medinfo');
+  if(med){ medBox.style.display='block'; medBox.innerHTML = med; }
+  else { medBox.style.display='none'; medBox.innerHTML=''; }
+
+  if(redFlags){
+    $('#top3').innerHTML = top.length
+      ? `<div style="grid-column:1/-1">
+          <p style="font-weight:600;color:var(--bad);margin:0 0 10px">Най-вероятни състояния по оценка — прегледай ги след медицинска консултация:</p>
+          <div class="res">${top.map(([k,v],i) => renderResultCompact(k,v,i+1)).join('')}</div>
+          <div style="margin-top:14px;padding:12px 14px;background:#fff7f7;border:1.5px solid var(--bad);border-radius:12px;color:#7f1d1d;font-size:14px;line-height:1.6">
+            ⚠️ <strong>Първо провери клиничното си състояние.</strong> Преди да предприемаш каквото и да е лечение, свързано с тревожни разстройства и стрес, е необходимо да изключиш медицински причини за симптомите чрез консултация с лекар.
+          </div>
+        </div>`
+      : '';
+  } else {
+    $('#top3').innerHTML = top.length
+      ? top.map(([k,v], i) => renderResult(k, v, i+1)).join('')
+      : `<div class="result"><div class="head"><h3>Няма достатъчно сигнал за конкретно състояние</h3></div>
+          Попълни още от секциите или опиши последен епизод по-детайлно.</div>`;
+  }
+
+  $('#results').style.display='block';
+  window.scrollTo({top:$('#results').offsetTop-8,behavior:'smooth'});
+});
+
+$('#resetBtn').addEventListener('click', ()=>{
+  $('#results').style.display='none';
+  $('#top3').innerHTML='';
+  $('#emergency').style.display='none';
+  $('#medinfo').style.display='none';
+});
+</script>
+</body>
+</html>
